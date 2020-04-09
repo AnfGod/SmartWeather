@@ -38,7 +38,7 @@ public class testApi{
 		String response = null;
 	    try {
 	      
-	      HttpGet httpGetRequest = new HttpGet("http://api.openweathermap.org/data/2.5/weather?q=Raleigh,us&appid=e7693b306c83405b1c8cb4290fd60a5e&units=metric");
+	      HttpGet httpGetRequest = new HttpGet("http://api.openweathermap.org/data/2.5/weather?q=Raleigh,us&appid=e7693b306c83405b1c8cb4290fd60a5e&units=imperial");
 
 	      // Execute HTTP request
 	      httpResponse = httpClient.execute(httpGetRequest);
