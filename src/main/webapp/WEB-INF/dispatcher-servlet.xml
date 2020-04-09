@@ -16,7 +16,7 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
         <mvc:annotation-driven/>
-        <context:component-scan base-package="com.api.expo"/>
+        <context:component-scan base-package="com.api.smartweather"/>
 
         <bean id="ViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
             <property name="ViewClass" value="org.springframework.web.servlet.view.JstlView"></property>
