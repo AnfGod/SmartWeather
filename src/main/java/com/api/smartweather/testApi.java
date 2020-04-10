@@ -2,24 +2,23 @@ package com.api.smartweather;
 
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.io.InputStreamReader;
 
-import org.apache.http.client.HttpClient;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.api.model.TestApiModel;
 
 @RestController
 public class testApi{
@@ -28,17 +27,18 @@ public class testApi{
 		super();
 	}
 	
-	@RequestMapping(value = "/api/testApi", method = RequestMethod.GET,
+	@RequestMapping(value = "/api/weather/{lat}/{lon:.+}", method = RequestMethod.GET,
 			 produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public String helloWorld() {
+	public String helloWorld(@PathVariable("lat") String lat, 
+            @PathVariable("lon") String lon) {
 	
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		HttpResponse httpResponse = null;
 		String response = null;
 	    try {
-	      
-	      HttpGet httpGetRequest = new HttpGet("http://api.openweathermap.org/data/2.5/weather?q=Raleigh,us&appid=e7693b306c83405b1c8cb4290fd60a5e&units=imperial");
+	      String url = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&appid=e7693b306c83405b1c8cb4290fd60a5e&units=imperial";
+	      HttpGet httpGetRequest = new HttpGet(url);
 
 	      // Execute HTTP request
 	      httpResponse = httpClient.execute(httpGetRequest);
@@ -52,11 +52,13 @@ public class testApi{
 	      if (entity != null) {
 	        InputStream inputStream = entity.getContent();
 	        try {
-	          int bytesRead = 0;
-	          BufferedInputStream bis = new BufferedInputStream(inputStream);
-	          while ((bytesRead = bis.read(buffer)) != -1) {
-	            response = new String(buffer, 0, bytesRead);
-	          }
+	        	BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+	            StringBuilder sb = new StringBuilder();
+	            String line = null;
+	            while ((line = reader.readLine()) != null) {
+	                sb.append(line + "\n");
+	            }
+	            response = sb.toString();
 	        } catch (IOException ioException) {
 	          // In case of an IOException the connection will be released
 	          // back to the connection manager automatically
